@@ -3,6 +3,8 @@ import scrapy
 #from scrapy.loader import ItemLoader
 
 #from quotes_spider.items import QuotesSpiderItem
+from time import sleep
+import random
 
 
 class QuotesSpider(scrapy.Spider):
@@ -33,6 +35,7 @@ class QuotesSpider(scrapy.Spider):
                 'Author': author,
                 'Tags': tags
             }
+            sleep(random.randrange(1, 3))
 
         next_page = response.xpath(
             ".//*[@class='next']/a/@href").extract_first()
