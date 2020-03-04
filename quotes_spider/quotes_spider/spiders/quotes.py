@@ -1,20 +1,29 @@
 # -*- coding: utf-8 -*-
 import scrapy
 #from scrapy.loader import ItemLoader
-
 #from quotes_spider.items import QuotesSpiderItem
-from time import sleep
-import random
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
+# from time import sleep
+# import random
 
 
 class QuotesSpider(scrapy.Spider):
 
     name = 'quotes'
-    allowed_domains = ['quotes.toscrape.com']
-    start_urls = ['http://quotes.toscrape.com/']
+    start_urls = ['http://quotes.toscrape.com/login']
 
     def parse(self, response):
+        token = response.xpath(
+            "/html/body/div/form/*[@name='csrf_token']/@value").extract_first()
 
+        return FormRequest.from_response(response, formdata={'csrf_token': token,
+                                                             'username': 'foo',
+                                                             'password':     'foo'},
+                                         callback=self.quote_spider)
+
+    def quote_spider(self, response):
+        open_in_browser(response)
         # item_obj = ItemLoader(item=QuotesSpiderItem(), response=response)
 
         quotes = response.xpath('//*[@class="quote"]')
@@ -35,10 +44,10 @@ class QuotesSpider(scrapy.Spider):
                 'Author': author,
                 'Tags': tags
             }
-            sleep(random.randrange(1, 3))
+            # sleep(random.randrange(1, 3))
 
         next_page = response.xpath(
             ".//*[@class='next']/a/@href").extract_first()
         abs_next_page = response.urljoin(next_page)
 
-        yield scrapy.Request(abs_next_page)
+        yield scrapy.Request(abs_next_page, callback=self.quote_spider)
