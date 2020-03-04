@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from scrapy import Spider
-from scrapy.loader import ItemLoader
+import scrapy
+#from scrapy.loader import ItemLoader
 
-from quotes_spider.items import QuotesSpiderItem
+#from quotes_spider.items import QuotesSpiderItem
 
 
-class QuotesSpider(Spider):
+class QuotesSpider(scrapy.Spider):
 
     name = 'quotes'
     allowed_domains = ['quotes.toscrape.com']
@@ -13,7 +13,7 @@ class QuotesSpider(Spider):
 
     def parse(self, response):
 
-        item_obj = ItemLoader(item=QuotesSpiderItem(), response=response)
+        # item_obj = ItemLoader(item=QuotesSpiderItem(), response=response)
 
         quotes = response.xpath('//*[@class="quote"]')
         for quote in quotes:
@@ -23,19 +23,19 @@ class QuotesSpider(Spider):
             tags = quote.xpath(
                 ".//*[@itemprop='keywords']/@content").extract_first()
 
-            item_obj.add_value('text', text)
-            item_obj.add_value('author', author)
-            item_obj.add_value('tags', tags)
+            # item_obj.add_value('text', text)
+            # item_obj.add_value('author', author)
+            # item_obj.add_value('tags', tags)
 
-            return item_obj.load_item()
-            # yield{
-            #     'Text': text,
-            #     'Author': author,
-            #     'Tags': tags
-            # }
+            # return item_obj.load_item()
+            yield{
+                'Text': text,
+                'Author': author,
+                'Tags': tags
+            }
 
-        # next_page = response.xpath(
-        #     ".//*[@class='next']/a/@href").extract_first()
-        # abs_next_page = response.urljoin(next_page)
+        next_page = response.xpath(
+            ".//*[@class='next']/a/@href").extract_first()
+        abs_next_page = response.urljoin(next_page)
 
-        # yield scrapy.Request(abs_next_page)
+        yield scrapy.Request(abs_next_page)
