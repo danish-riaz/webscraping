@@ -3,7 +3,7 @@ import scrapy
 #from scrapy.loader import ItemLoader
 #from quotes_spider.items import QuotesSpiderItem
 from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
+# from scrapy.utils.response import open_in_browser
 # from time import sleep
 # import random
 
@@ -19,11 +19,11 @@ class QuotesSpider(scrapy.Spider):
 
         return FormRequest.from_response(response, formdata={'csrf_token': token,
                                                              'username': 'foo',
-                                                             'password':     'foo'},
+                                                             'password': 'foo'},
                                          callback=self.quote_spider)
 
     def quote_spider(self, response):
-        open_in_browser(response)
+        # open_in_browser(response)
         # item_obj = ItemLoader(item=QuotesSpiderItem(), response=response)
 
         quotes = response.xpath('//*[@class="quote"]')
