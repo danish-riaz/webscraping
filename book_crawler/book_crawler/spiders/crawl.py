@@ -14,7 +14,9 @@ def get_table_data(response, name):
 class CrawlSpider(Spider):
     name = 'crawl'
     allowed_domains = ['books.toscrape.com']
-    start_urls = ('http://books.toscrape.com/',)
+
+    def __init__(self, category):
+        self.start_urls = [category]
 
     def parse(self, response):
         books = response.xpath("//h3/a/@href").extract()
