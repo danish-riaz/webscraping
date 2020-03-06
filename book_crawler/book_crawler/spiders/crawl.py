@@ -5,6 +5,8 @@ from scrapy import Spider
 # from selenium import webdriver
 # from scrapy.selector import Selector
 from scrapy.http import Request
+from scrapy.loader import ItemLoader
+from book_crawler.items import BookCrawlerItem
 
 
 def get_table_data(response, name):
@@ -14,21 +16,24 @@ def get_table_data(response, name):
 class CrawlSpider(Spider):
     name = 'crawl'
     allowed_domains = ['books.toscrape.com']
+    start_urls = ('http://books.toscrape.com/',)
 
-    def __init__(self, category):
-        self.start_urls = [category]
+    # def __init__(self, category):
+    #     self.start_urls = [category]
 
     def parse(self, response):
         books = response.xpath("//h3/a/@href").extract()
         for book in books:
             book_url = response.urljoin(book)
             yield Request(book_url, callback=self.each_book)
-        next_page = response.xpath(
-            "//*[@class='next']/a[text()='next']/@href").extract_first()
-        next_page_url = response.urljoin(next_page)
-        yield Request(next_page_url)
+        # next_page = response.xpath(
+        #     "//*[@class='next']/a[text()='next']/@href").extract_first()
+        # next_page_url = response.urljoin(next_page)
+        # yield Request(next_page_url)
 
     def each_book(self, response):
+        item_loader_obj = ItemLoader(
+            item=BookCrawlerItem(), response=response)
         h1 = response.xpath(
             "//*[@class='col-sm-6 product_main']/h1/text()").extract_first()
         price = response.xpath(
@@ -38,9 +43,9 @@ class CrawlSpider(Spider):
             ".//*[contains(@class, 'star-rating')]/@class").extract_first()
         rating = rating.replace('star-rating ', '')
 
-        image = response.xpath(
+        image_urls = response.xpath(
             "//*[@class='item active']/img/@src").extract_first()
-        image = image.replace('../../', 'http://books.toscrape.com/')
+        image_urls = image_urls.replace('../../', 'http://books.toscrape.com/')
 
         des = response.xpath(
             "//*[@id='product_description']/following-sibling::p/text()").extract_first()
@@ -53,18 +58,32 @@ class CrawlSpider(Spider):
         avalibility = get_table_data(response, "Availability")
         reviews = get_table_data(response, "Number of reviews")
 
-        yield{'Heading': h1,
-              'Price': price,
-              'Rating': rating,
-              'Image': image,
-              'UPC': upc,
-              'Product Type': product_type,
-              'Price (excl. tax)': price_etax,
-              'Price (incl. tax)': price_itac,
-              'Tax': tax,
-              'Availability': avalibility,
-              'Number of reviews': reviews,
-              'Description': des, }
+        item_loader_obj.add_value('h1', h1)
+        item_loader_obj.add_value('price', price)
+        item_loader_obj.add_value('rating', rating)
+        item_loader_obj.add_value('image_urls', image_urls)
+        item_loader_obj.add_value('upc', upc)
+        item_loader_obj.add_value('product_type', product_type)
+        item_loader_obj.add_value('price_etax', price_etax)
+        item_loader_obj.add_value('price_itac', price_itac)
+        item_loader_obj.add_value('tax', tax)
+        item_loader_obj.add_value('avalibility', avalibility)
+        item_loader_obj.add_value('reviews', reviews)
+        item_loader_obj.add_value('des', des)
+
+        return item_loader_obj.load_item()
+        # yield{'Heading': h1,
+        #       'Price': price,
+        #       'Rating': rating,
+        #       'Image': image_urls,
+        #       'UPC': upc,
+        #       'Product Type': product_type,
+        #       'Price (excl. tax)': price_etax,
+        #       'Price (incl. tax)': price_itac,
+        #       'Tax': tax,
+        #       'Availability': avalibility,
+        #       'Number of reviews': reviews,
+        #       'Description': des, }
         # def start_requests(self):
     #     self.driver = webdriver.Chrome()
     #     self.driver.get('http://books.toscrape.com/')
