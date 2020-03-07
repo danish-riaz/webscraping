@@ -6,7 +6,6 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.exceptions import DropItem
 import urllib.request
-import shutil
 
 
 def dwnlaod_image(url, path, name):
@@ -17,18 +16,24 @@ def dwnlaod_image(url, path, name):
            "'": ''}
     for k, v in dic.items():
         name = name.replace(k, v)
-    shutil.rmtree(path+'/img')
     full_path = path + name + '.jpg'
     urllib.request.urlretrieve(url, full_path)
-    # r = requests.get(url, allow_redirects=True)
-    # open(full_path, 'wb').write(r.content)
+
+
+# def clear_folder(path):
+#     filelist = [f for f in os.listdir(path)]
+#     if len(filelist) != 0:
+#         for f in filelist:
+#             os.remove(os.path.join(path, f))
 
 
 class BookCrawlerPipeline(object):
     def process_item(self, item, spider):
-        if float(item['price'][0][1:]) > 25:
+        path = '/media/dani/Hard Disk/Danish/Paractice/webscraping/book_crawler/Images/'
+        if float(item['price'][0][1:]) < 25:
+            # clear_folder(path)
             dwnlaod_image(
-                item['image_urls'][0], '/media/dani/Hard Disk/Danish/Paractice/webscraping/book_crawler/Images/', item['h1'][0])
+                item['image_urls'][0], path, item['h1'][0])
             return item
         else:
             raise DropItem("Missing price in %s" % item)

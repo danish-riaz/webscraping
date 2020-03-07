@@ -7,10 +7,19 @@ from scrapy import Spider
 from scrapy.http import Request
 from scrapy.loader import ItemLoader
 from book_crawler.items import BookCrawlerItem
+import os
+import glob
 
 
 def get_table_data(response, name):
     return response.xpath('//th[text()="' + name + '"]/following-sibling::td/text()').extract_first()
+
+
+def clear_folder(path):
+    filelist = [f for f in os.listdir(path)]
+    if len(filelist) != 0:
+        for f in filelist:
+            os.remove(os.path.join(path, f))
 
 
 class CrawlSpider(Spider):
@@ -20,6 +29,8 @@ class CrawlSpider(Spider):
 
     # def __init__(self, category):
     #     self.start_urls = [category]
+    clear_folder(
+        '/media/dani/Hard Disk/Danish/Paractice/webscraping/book_crawler/Images/')
 
     def parse(self, response):
         books = response.xpath("//h3/a/@href").extract()
