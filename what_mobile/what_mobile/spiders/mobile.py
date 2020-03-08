@@ -33,6 +33,7 @@ class MobileSpider(Spider):
         for price in prices:
             mobile_url = 'https://www.whatmobile.com.pk' + price
             yield Request(mobile_url, callback=self.mobile_data)
+            break
 
         # latests = response.xpath(
         #     '//*[@role="presentation"]/a/@href')[1].extract()

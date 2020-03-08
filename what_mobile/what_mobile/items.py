@@ -5,10 +5,10 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/items.html
 
-from scrapy import Item
+import scrapy
 
 
-class WhatMobileItem(Item):
+class WhatMobileItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     mobile_name = scrapy.Field()
