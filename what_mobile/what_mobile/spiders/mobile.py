@@ -2,7 +2,7 @@
 from scrapy import Spider
 from scrapy.http import Request
 from scrapy.loader import ItemLoader
-from what_mobile.item import WhatMobileItem
+from what_mobile.items import WhatMobileItem
 
 
 def first_element(response, name):
@@ -24,11 +24,11 @@ class MobileSpider(Spider):
 
         for brand in brands:
             brand_url = response.urljoin(brand)
+            print(brand_url)
             yield Request(brand_url, callback=self.brand_parse)
-            break
 
     def brand_parse(self, response):
-        print("**************************************INSIDE**************************************")
+        print("************INSIDE************")
         prices = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
         for price in prices:
             mobile_url = 'https://www.whatmobile.com.pk' + price
@@ -55,11 +55,12 @@ class MobileSpider(Spider):
 
     def mobile_data(self, response):
 
-        l = ItemLoader(text=WhatMobileItem(), response=response)
+        l = ItemLoader(item=WhatMobileItem(), response=response)
 
         mobile_name = response.xpath(
             '//h1[@class="hdng3"]/text()').extract_first()
-        price_pkr = response.xpath('//*[@class="hdng"]/text()')[0].extract()
+        price_pkr = response.xpath(
+            '//*[@class="hdng"]/text()')[0].extract()
         price_usd = response.xpath('//*[@class="hdng"]/text()')[1].extract()
         rating = response.xpath(
             '//*[contains(@class, "rateit")]/@data-rateit-value')[0].extract()
