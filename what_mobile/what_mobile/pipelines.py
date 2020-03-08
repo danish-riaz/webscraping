@@ -18,6 +18,11 @@ class WhatMobilePipeline(object):
             built_in = built_in.replace(k, v)
         built_in = built_in[(built_in.find("G") - 1):built_in.find("G")]
         built_in = ''.join(built_in)
+        print("**************************************************************")
+        print("**************************************************************")
+        print(built_in)
+        print("**************************************************************")
+        print("**************************************************************")
         # PRICE
         price_pkr = item['price_pkr']
         dic_price = {' ': '', '\n': '', 'R': '',
@@ -26,29 +31,49 @@ class WhatMobilePipeline(object):
             price_pkr = [i.replace(k, v) for i in price_pkr]
             # price_pkr = price_pkr.replace(k, v)
         price_pkr = ''.join(price_pkr)
+        print("**************************************************************")
+        print("**************************************************************")
+        print(price_pkr)
+        print("**************************************************************")
+        print("**************************************************************")
         main = item['main']
         main = main[0][(main[0].find("M") - 3):(main[0].find("M") - 1)]
         main = ''.join(main)
+        print("**************************************************************")
+        print("**************************************************************")
+        print(main)
+        print("**************************************************************")
+        print("**************************************************************")
 
-        if (int(built_in) >= 4 and int(price_pkr) <= 30000 and int(main) > 20):
-            gen_dic = {'\n': ''}
-            for key in item.keys():
-                local_item = item[key]
-                for k, v in gen_dic.items():
-                    local_item = [i.replace(k, v) for i in local_item]
-                    local_item = ''.join(local_item)
-                    local_item = re.sub(' +', ' ', local_item)
-                    item[key] = local_item
-            return item
+        gen_dic = {'\n': '', '\xa0': ''}
+        for key in item.keys():
+            local_item = item[key]
+            for k, v in gen_dic.items():
+                local_item = [i.replace(k, v) for i in local_item]
+                local_item = ''.join(local_item)
+                local_item = re.sub(' +', ' ', local_item)
+                item[key] = local_item
+        return item
 
-        else:
-            gen_dic = {'\n': ''}
-            for key in item.keys():
-                local_item = item[key]
-                for k, v in gen_dic.items():
-                    local_item = [i.replace(k, v) for i in local_item]
-                    local_item = ''.join(local_item)
-                    local_item = re.sub(' +', ' ', local_item)
-                    item[key] = local_item
-            return item
-            # raise DropItem("Missing price in %s" % item)
+        # if ((int(built_in) >= 4) and (int(price_pkr) <= 30000) and (int(main) < 20)):
+        #     gen_dic = {'\n': '', '\xa0': ''}
+        #     for key in item.keys():
+        #         local_item = item[key]
+        #         for k, v in gen_dic.items():
+        #             local_item = [i.replace(k, v) for i in local_item]
+        #             local_item = ''.join(local_item)
+        #             local_item = re.sub(' +', ' ', local_item)
+        #             item[key] = local_item
+        #     return item
+
+        # else:
+        # gen_dic = {'\n': '', '\xa0': ''}
+        # for key in item.keys():
+        #     local_item = item[key]
+        #     for k, v in gen_dic.items():
+        #         local_item = [i.replace(k, v) for i in local_item]
+        #         local_item = ''.join(local_item)
+        #         local_item = re.sub(' +', ' ', local_item)
+        #         item[key] = local_item
+        # return item
+        # raise DropItem("Missing price in %s" % item)

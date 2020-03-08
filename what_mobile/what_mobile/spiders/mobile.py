@@ -30,6 +30,10 @@ class MobileSpider(Spider):
     def brand_parse(self, response):
         print("************INSIDE************")
         prices = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
+        if len(prices) == 0:
+            prices = response.xpath(
+                '//ul[contains(@class, "nav-tabs")]/following-sibling::table/tr/following-sibling::tr/td/a[1]/@href').extract()
+
         for price in prices:
             mobile_url = 'https://www.whatmobile.com.pk' + price
             yield Request(mobile_url, callback=self.mobile_data)
@@ -109,7 +113,9 @@ class MobileSpider(Spider):
         extra = after_first_element(response, "Extra")
         # Battery
         capacity = first_element(response, "Capacity")
-
+        # items_list = ['mobile_name','price_pkr','price_usd','rating','os','ui','dimensions','weight','sim','colors','band_2G','band_3G','band_4G','cpu','chipset','gpu','technology','size','resolution','protection','extra_features','built_in','card','main','features','front','wlan','bluetooth','gps','usb','nfc','data','sensors','audio','browser','messaging','games','torch','extra','capacity']
+        # for item in items_list:
+        #     l.add_value(item, item)
         l.add_value('mobile_name', mobile_name)
         l.add_value('price_pkr', price_pkr)
         l.add_value('price_usd', price_usd)
