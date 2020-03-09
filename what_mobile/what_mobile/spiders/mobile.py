@@ -26,10 +26,9 @@ class MobileSpider(Spider):
             brand_url = response.urljoin(brand)
             print(brand_url)
             yield Request(brand_url, callback=self.brand_parse)
-            break
 
     def brand_parse(self, response):
-        print("************INSIDE************")
+        # print("************INSIDE************")
         search = response.url[:response.url.find("_")]
         search = search.replace("https://www.whatmobile.com.pk", "")
         mobiles = response.xpath(

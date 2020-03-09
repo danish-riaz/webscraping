@@ -11,24 +11,24 @@ import re
 class WhatMobilePipeline(object):
     def process_item(self, item, spider):
         # RAM
-        built_in = item['built_in']
-        built_in = built_in[0][built_in[0].find(","):]
-        dic = {' ': '', '\xa0': '', ',': ''}
-        for k, v in dic.items():
-            built_in = built_in.replace(k, v)
-        built_in = built_in[(built_in.find("G") - 1):built_in.find("G")]
-        built_in = ''.join(built_in)
-        # PRICE
-        price_pkr = item['price_pkr']
-        dic_price = {' ': '', '\n': '', 'R': '',
-                     'S': '', '.': '', ',': '', 'r': '', 's': ''}
-        for k, v in dic_price.items():
-            price_pkr = [i.replace(k, v) for i in price_pkr]
-            # price_pkr = price_pkr.replace(k, v)
-        price_pkr = ''.join(price_pkr)
-        main = item['main']
-        main = main[0][(main[0].find("M") - 3):(main[0].find("M") - 1)]
-        main = ''.join(main)
+        # built_in = item['built_in']
+        # built_in = built_in[0][built_in[0].find(","):]
+        # dic = {' ': '', '\xa0': '', ',': ''}
+        # for k, v in dic.items():
+        #     built_in = built_in.replace(k, v)
+        # built_in = built_in[(built_in.find("G") - 1):built_in.find("G")]
+        # built_in = ''.join(built_in)
+        # # PRICE
+        # price_pkr = item['price_pkr']
+        # dic_price = {' ': '', '\n': '', 'R': '',
+        #              'S': '', '.': '', ',': '', 'r': '', 's': ''}
+        # for k, v in dic_price.items():
+        #     price_pkr = [i.replace(k, v) for i in price_pkr]
+        #     # price_pkr = price_pkr.replace(k, v)
+        # price_pkr = ''.join(price_pkr)
+        # main = item['main']
+        # main = main[0][(main[0].find("M") - 3):(main[0].find("M") - 1)]
+        # main = ''.join(main)
 
         gen_dic = {'\n': '', '\xa0': ''}
         for key in item.keys():
