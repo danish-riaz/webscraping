@@ -26,38 +26,48 @@ class MobileSpider(Spider):
             brand_url = response.urljoin(brand)
             print(brand_url)
             yield Request(brand_url, callback=self.brand_parse)
+            break
 
     def brand_parse(self, response):
         print("************INSIDE************")
-        prices = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
-        if len(prices) == 0:
-            prices = response.xpath(
-                '//ul[contains(@class, "nav-tabs")]/following-sibling::table/tr/following-sibling::tr/td/a[1]/@href').extract()
-        if len(prices) == 0:
-            prices = response.xpath(
-                '//td[@class="BiggerText"]/a/@href').extract_first()
-        for price in prices:
-            mobile_url = 'https://www.whatmobile.com.pk' + price
+        search = response.url[:response.url.find("_")]
+        search = search.replace("https://www.whatmobile.com.pk", "")
+        mobiles = response.xpath(
+            '//a[starts-with(@href, "' + search + '")][1]/@href').extract()
+        mobiles = set(mobiles)
+        for mobile in mobiles:
+            mobile_url = 'https://www.whatmobile.com.pk' + mobile
             yield Request(mobile_url, callback=self.mobile_data)
             break
+            # prices = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
+            # if len(prices) == 0:
+            #     prices = response.xpath(
+            #         '//ul[contains(@class, "nav-tabs")]/following-sibling::table/tr/following-sibling::tr/td/a[1]/@href').extract()
+            # if len(prices) == 0:
+            #     prices = response.xpath(
+            #         '//td[@class="BiggerText"]/a/@href').extract_first()
+            # for price in prices:
+            #     mobile_url = 'https://www.whatmobile.com.pk' + price
+            #     yield Request(mobile_url, callback=self.mobile_data)
+            #     break
 
-        # latests = response.xpath(
-        #     '//*[@role="presentation"]/a/@href')[1].extract()
-        # latests = 'https://www.whatmobile.com.pk/' + latests
-        # latests = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
-        # for latest in latests:
-        #     mobile_url = 'http://whatmobile.com.pk' + latest
-        #     yield Request(mobile_url, callback=self.mobile_data)
+            # latests = response.xpath(
+            #     '//*[@role="presentation"]/a/@href')[1].extract()
+            # latests = 'https://www.whatmobile.com.pk/' + latests
+            # latests = response.xpath('//*[@class="item"]/div/a[1]/@href').extract()
+            # for latest in latests:
+            #     mobile_url = 'http://whatmobile.com.pk' + latest
+            #     yield Request(mobile_url, callback=self.mobile_data)
 
-        # coming_soons = response.xpath(
-        #     '//*[@role="presentation"]/a/@href')[2].extract()
-        # coming_soons = 'https://www.whatmobile.com.pk/' + coming_soons
-        # coming_soons = response.xpath(
-        #     '//*[@class="item"]/div/a[1]/@href').extract()
+            # coming_soons = response.xpath(
+            #     '//*[@role="presentation"]/a/@href')[2].extract()
+            # coming_soons = 'https://www.whatmobile.com.pk/' + coming_soons
+            # coming_soons = response.xpath(
+            #     '//*[@class="item"]/div/a[1]/@href').extract()
 
-        # for coming_soon in coming_soons:
-        #     mobile_url = 'http://whatmobile.com.pk' + coming_soon
-        #     yield Request(mobile_url, callback=self.mobile_data)
+            # for coming_soon in coming_soons:
+            #     mobile_url = 'http://whatmobile.com.pk' + coming_soon
+            #     yield Request(mobile_url, callback=self.mobile_data)
 
     def mobile_data(self, response):
 
