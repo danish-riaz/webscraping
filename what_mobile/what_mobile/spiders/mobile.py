@@ -6,11 +6,17 @@ from what_mobile.items import WhatMobileItem
 
 
 def first_element(response, name):
-    return response.xpath('//*[@class="RowBG2"]/th[text()="' + name + '"]/following-sibling::td/text()').extract()
+    try:
+        return response.xpath('//*[@class="RowBG2"]/th[text()="' + name + '"]/following-sibling::td/text()').extract()
+    except:
+        return ''
 
 
 def after_first_element(response, name):
-    return response.xpath('//*[@class="RowBG1"]/th[text()="' + name + '"]/following-sibling::td/text()').extract()
+    try:
+        return response.xpath('//*[@class="RowBG1"]/th[text()="' + name + '"]/following-sibling::td/text()').extract()
+    except:
+        return ''
 
 
 class MobileSpider(Spider):
@@ -24,8 +30,8 @@ class MobileSpider(Spider):
 
         for brand in brands:
             brand_url = response.urljoin(brand)
-            print(brand_url)
             yield Request(brand_url, callback=self.brand_parse)
+            break
 
     def brand_parse(self, response):
         # print("************INSIDE************")
@@ -72,14 +78,25 @@ class MobileSpider(Spider):
 
         l = ItemLoader(item=WhatMobileItem(), response=response)
 
-        mobile_name = response.xpath(
-            '//h1[@class="hdng3"]/text()').extract_first()
-        # price_pkr = response.xpath(
-        #     '//*[@class="hdng"]/text()')[0].extract()
+        # mobile_name = response.xpath(
+        #     '//h1[@class="hdng3"]/text()').extract_first()
+        price_pkr = response.xpath(
+            '//*[@class="hdng"]/text()')[0].extract()
         # price_usd = response.xpath('//*[@class="hdng"]/text()')[1].extract()
         # rating = response.xpath(
         #     '//*[contains(@class, "rateit")]/@data-rateit-value')[0].extract()
-        # # Build
+
+        # first_elments_list = ['OS', '2G Band', 'CPU', 'Technology',
+        #                       'Built-in', 'Main', 'WLAN', 'Sensors', 'Capacity']
+        # for f_e_l in first_elments_list:
+        #     first_element(response, f_e_l)
+
+        # after_first_element_list = ['ui', 'dimensions', 'weight', 'sim', 'colors', 'band_3G', 'band_4G', 'chipset', 'gpu', 'size', 'resolution', 'protection',
+        #                             'extra_features', 'card', 'features', 'front', 'bluetooth', 'gps', 'usb', 'nfc', 'data', 'audio', 'browser', 'messaging', 'games', 'torch', 'extra']
+        # for a_f_e_l in after_first_element_list:
+        #     after_first_element(response, a_f_e_l)
+
+        # Build
         # os = first_element(response, "OS")
         # ui = after_first_element(response, "UI")
         # dimensions = after_first_element(response, "Dimensions")
@@ -101,10 +118,10 @@ class MobileSpider(Spider):
         # protection = after_first_element(response, "Protection")
         # extra_features = after_first_element(response, "Extra Features")
         # # Memory
-        # built_in = first_element(response, "Built-in")
+        built_in = first_element(response, "Built-in")
         # card = after_first_element(response, "Card")
         # # Camera
-        # main = first_element(response, "Main")
+        main = first_element(response, "Main")
         # features = after_first_element(response, "Features")
         # front = after_first_element(response, "Front")
         # # Connectivity
@@ -124,11 +141,13 @@ class MobileSpider(Spider):
         # extra = after_first_element(response, "Extra")
         # # Battery
         # capacity = first_element(response, "Capacity")
+
         # items_list = ['mobile_name','price_pkr','price_usd','rating','os','ui','dimensions','weight','sim','colors','band_2G','band_3G','band_4G','cpu','chipset','gpu','technology','size','resolution','protection','extra_features','built_in','card','main','features','front','wlan','bluetooth','gps','usb','nfc','data','sensors','audio','browser','messaging','games','torch','extra','capacity']
         # for item in items_list:
         #     l.add_value(item, item)
-        l.add_value('mobile_name', mobile_name)
-        # l.add_value('price_pkr', price_pkr)
+
+        # l.add_value('mobile_name', mobile_name)
+        l.add_value('price_pkr', price_pkr)
         # l.add_value('price_usd', price_usd)
         # l.add_value('rating', rating)
         # l.add_value('os', os)
@@ -148,9 +167,9 @@ class MobileSpider(Spider):
         # l.add_value('resolution', resolution)
         # l.add_value('protection', protection)
         # l.add_value('extra_features', extra_features)
-        # l.add_value('built_in', built_in)
+        l.add_value('built_in', built_in)
         # l.add_value('card', card)
-        # l.add_value('main', main)
+        l.add_value('main', main)
         # l.add_value('features', features)
         # l.add_value('front', front)
         # l.add_value('wlan', wlan)

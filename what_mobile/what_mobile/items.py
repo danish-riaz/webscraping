@@ -11,8 +11,8 @@ import scrapy
 class WhatMobileItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    mobile_name = scrapy.Field()
-    # price_pkr = scrapy.Field()
+    # mobile_name = scrapy.Field()
+    price_pkr = scrapy.Field()
     # price_usd = scrapy.Field()
     # rating = scrapy.Field()
     # os = scrapy.Field()
@@ -32,9 +32,9 @@ class WhatMobileItem(scrapy.Item):
     # resolution = scrapy.Field()
     # protection = scrapy.Field()
     # extra_features = scrapy.Field()
-    # built_in = scrapy.Field()
+    built_in = scrapy.Field()
     # card = scrapy.Field()
-    # main = scrapy.Field()
+    main = scrapy.Field()
     # features = scrapy.Field()
     # front = scrapy.Field()
     # wlan = scrapy.Field()
