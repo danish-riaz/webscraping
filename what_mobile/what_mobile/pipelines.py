@@ -31,7 +31,7 @@ class WhatMobilePipeline(object):
             price = [i.replace(k, v) for i in price]
             price = ''.join(price)
         try:
-            if(int(price) < 300):
+            if(int(price) < 30000):
                 price_flag = True
         except:
             pass
@@ -40,7 +40,9 @@ class WhatMobilePipeline(object):
             clean_spaces(item, spider)
             return item
         else:
-            raise DropItem("Missing price in %s" % item)
+            clean_spaces(item, spider)
+            raise DropItem("Missing price in ITEM")
+            # %s" % item)
         # RAM
         # flag_1 = False
         # flag_2 = False

@@ -22,7 +22,7 @@ def after_first_element(response, name):
 class MobileSpider(Spider):
     name = 'mobile'
     allowed_domains = ['whatmobile.com.pk']
-    start_urls = ['http://whatmobile.com.pk/']
+    start_urls = ['https://www.whatmobile.com.pk/']
 
     def parse(self, response):
         brands = response.xpath(
@@ -31,7 +31,6 @@ class MobileSpider(Spider):
         for brand in brands:
             brand_url = response.urljoin(brand)
             yield Request(brand_url, callback=self.brand_parse)
-            break
 
     def brand_parse(self, response):
         # print("************INSIDE************")
