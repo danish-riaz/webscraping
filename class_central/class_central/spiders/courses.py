@@ -28,8 +28,9 @@ class CoursesSpider(Spider):
         url = div.xpath('.//td[2]/a/@href').extract()
         rating = response.xpath(
             '//td[@class="hide-on-hover fill-space relative"]/@data-timestamp').extract()
-
-        yield{'title': title,
-              'url': url,
-              'rating': rating
-              }
+        for a, b, c in zip(title, url, rating):
+            yield{'title': a,
+                  'url': ('https://www.classcentral.com' + b),
+                  'rating': c
+                  }
+        yield Request('https://www.classcentral.com/subject/humanities?page=2', callback=self.get_data)
