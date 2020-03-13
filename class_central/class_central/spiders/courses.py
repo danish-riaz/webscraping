@@ -10,6 +10,7 @@ class CoursesSpider(Spider):
 
     def __init__(self, subject=None):
         self.subject = subject
+        self.counter = 1
 
     def parse(self, response):
         if self.subject:
@@ -33,4 +34,10 @@ class CoursesSpider(Spider):
                   'url': ('https://www.classcentral.com' + b),
                   'rating': c
                   }
-        yield Request('https://www.classcentral.com/subject/humanities?page=2', callback=self.get_data)
+        load_more = response.xpath(
+            '//button[@class="btn-blue-outline btn-large margin-top-medium text-center"]/span[1]/text()').extract_first()
+        if load_more:
+            self.counter += 1
+            url = 'https://www.classcentral.com/subject/humanities?page=' + \
+                str(self.counter)
+            yield Request(url, callback=self.get_data)
