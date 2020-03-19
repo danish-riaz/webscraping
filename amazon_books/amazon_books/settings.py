@@ -103,8 +103,8 @@ PROXY_MODE = 0
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    'amazon_books.pipelines.AmazonBooksPipeline': 300,
-#}
+#     'amazon_books.pipelines.AmazonBooksPipeline': 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

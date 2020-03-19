@@ -15,18 +15,20 @@ class BooksSpider(scrapy.Spider):
     def parse(self, response):
         rows = response.xpath(
             '//div[@class="s-include-content-margin s-border-bottom s-latency-cf-section"]')
-        for row in rows:
-            yield Request(response.url, callback=self.get_data, meta={'row': row}, dont_filter=True)
+        authors = response.xpath(
+            '//h2[@class="a-size-mini a-spacing-none a-color-base s-line-clamp-2"]/following-sibling::div')
+        for row, author in zip(rows, authors):
+            yield Request(response.url, callback=self.get_data, meta={'row': row, 'author': author}, dont_filter=True)
 
     def get_data(self, response):
         l = ItemLoader(item=AmazonBooksItem(), response=response)
         row = response.meta.get('row')
+        author = response.meta.get('author')
         book_name = row.xpath(
             './/span[@class="a-size-medium a-color-base a-text-normal"]/text()').extract_first()
         img = row.xpath(
             './/div[@class="a-section aok-relative s-image-fixed-height"]/img/@src').extract_first()
-        author = row.xpath(
-            './/div[@class="a-row a-size-base a-color-secondary"]/span[@dir="auto" and text()="by "][1]/following-sibling::*[1]/text()').extract()
+        author = author.xpath('.//*/text()').extract()
 
         l.add_value('book_name', book_name, MapCompose(str.strip))
         l.add_value('img', img, MapCompose(str.strip))
