@@ -8,4 +8,9 @@
 
 class AmazonBooksPipeline(object):
     def process_item(self, item, spider):
+        author = item['author']
+        author = ''.join(author)
+        author = author.replace(",", "")
+        author = author.replace("by", "")
+        item['author'] = author
         return item
