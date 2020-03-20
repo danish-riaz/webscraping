@@ -13,7 +13,7 @@ BOT_NAME = 'amazon_books'
 
 SPIDER_MODULES = ['amazon_books.spiders']
 NEWSPIDER_MODULE = 'amazon_books.spiders'
-FEED_EXPORT_FIELDS = ['book_name', 'author', 'img', 'rating', 'rating_by']
+# FEED_EXPORT_FIELDS = ['book_name', 'author', 'img', 'rating', 'rating_by']
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazon_books (+http://www.yourdomain.com)'
