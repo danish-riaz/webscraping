@@ -30,8 +30,15 @@ class BooksSpider(scrapy.Spider):
             './/div[@class="a-section aok-relative s-image-fixed-height"]/img/@src').extract_first()
         author = author.xpath('.//*/text()').extract()
 
+        rating = response.xpath(
+            '//div[@class="a-section a-spacing-none a-spacing-top-micro"]/div[@class="a-row a-size-small"]/span[1]/@aria-label').extract()
+        rating_by = response.xpath(
+            '//div[@class="a-section a-spacing-none a-spacing-top-micro"]/div[@class="a-row a-size-small"]/span[2]/@aria-label').extract()
+
         l.add_value('book_name', book_name, MapCompose(str.strip))
         l.add_value('img', img, MapCompose(str.strip))
         l.add_value('author', author, MapCompose(str.strip))
+        l.add_value('rating', rating)
+        l.add_value('rating_by', rating_by)
 
         return l.load_item()

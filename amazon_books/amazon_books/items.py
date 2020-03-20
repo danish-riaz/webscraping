@@ -14,3 +14,5 @@ class AmazonBooksItem(scrapy.Item):
     book_name = scrapy.Field()
     img = scrapy.Field()
     author = scrapy.Field()
+    rating = scrapy.Field()
+    rating_by = scrapy.Field()
