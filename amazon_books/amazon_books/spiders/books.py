@@ -18,3 +18,15 @@ class BooksSpider(scrapy.Spider):
         for row in rows:
             img_link = row.xpath(
                 './/div[@class="sg-col-4-of-24 sg-col-4-of-12 sg-col-4-of-36 sg-col-4-of-28 sg-col-4-of-16 sg-col sg-col-4-of-20 sg-col-4-of-32"]//span/a/div/img/@src').extract()
+            book_name = row.xpath(
+                './/div[@class="sg-col-4-of-12 sg-col-8-of-16 sg-col-16-of-24 sg-col-12-of-20 sg-col-24-of-32 sg-col sg-col-28-of-36 sg-col-20-of-28"]//h2//a//span/text()').extract()
+            author = row.xpath('.').css(
+                '.sg-col-12-of-28 .a-color-secondary').css('::text').extract()
+            author = [each.strip() for each in author]
+            author = list(filter(None, author))
+            author = ''.join(author)
+            author = author.replace("by", "")
+            rating = row.xpath('.').css(
+                '.sg-col-12-of-28 .aok-align-bottom').xpath('./span/text()').extract()
+            by_users = row.xpath('.').css(
+                '.sg-col-12-of-28 .a-link-normal .a-size-base').xpath('./text()').extract()
