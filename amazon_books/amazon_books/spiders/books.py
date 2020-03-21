@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
-from amazon_books.items import AmazonBooksItem
-from scrapy.loader import ItemLoader
-from scrapy.loader.processors import MapCompose
-from scrapy.http import Request
+# from amazon_books.items import AmazonBooksItem
+# from scrapy.loader import ItemLoader
+# from scrapy.loader.processors import MapCompose
+# from scrapy.http import Request
 
 
 class BooksSpider(scrapy.Spider):
@@ -15,7 +15,8 @@ class BooksSpider(scrapy.Spider):
     def parse(self, response):
         rows = rows = response.xpath(
             '//div[@class="s-include-content-margin s-border-bottom s-latency-cf-section"]')
-        for row in rows:
+        prices = response.css('.sg-col-20-of-28 .sg-col-4-of-32 .sg-col-inner')
+        for row, price in zip(rows, prices):
             img_link = row.xpath(
                 './/div[@class="sg-col-4-of-24 sg-col-4-of-12 sg-col-4-of-36 sg-col-4-of-28 sg-col-4-of-16 sg-col sg-col-4-of-20 sg-col-4-of-32"]//span/a/div/img/@src').extract()
             book_name = row.xpath(
@@ -30,3 +31,21 @@ class BooksSpider(scrapy.Spider):
                 '.sg-col-12-of-28 .aok-align-bottom').xpath('./span/text()').extract()
             by_users = row.xpath('.').css(
                 '.sg-col-12-of-28 .a-link-normal .a-size-base').xpath('./text()').extract()
+
+            temp = []
+            l_p = price.xpath(
+                './/div[@class="a-row"]/a/span[@class="a-price"]/span[@class="a-offscreen"]/text()').extract()
+            label = price.xpath('.').css(
+                '.a-link-normal.a-text-bold::text').extract()
+            label = [each.strip() for each in label]
+            for a, b in zip(label, l_p):
+                temp.append(a)
+                temp.append(b)
+
+            yield {'img_link': img_link,
+                   'book_name': book_name,
+                   'author': author,
+                   'rating': rating,
+                   'by_users': by_users,
+                   'temp': temp
+                   }
