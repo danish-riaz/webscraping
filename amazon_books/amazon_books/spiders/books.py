@@ -3,11 +3,12 @@ import scrapy
 # from amazon_books.items import AmazonBooksItem
 # from scrapy.loader import ItemLoader
 # from scrapy.loader.processors import MapCompose
-# from scrapy.http import Request
+from scrapy.http import Request
 
 
 class BooksSpider(scrapy.Spider):
     name = 'books'
+    page_no = 2
     allowed_domains = ['amazon.com']
     start_urls = [
         'https://www.amazon.com/s?rh=n%3A283155%2Cn%3A%211000%2Cn%3A3&page=2&qid=1584500043&ref=lp_3_pg_2']
@@ -49,3 +50,9 @@ class BooksSpider(scrapy.Spider):
                    'by_users': by_users,
                    'temp': temp
                    }
+
+            next_page = 'https://www.amazon.com/s?rh=n%3A283155%2Cn%3A%211000%2Cn%3A3&page=' + \
+                str(BooksSpider.page_no) + '&qid=1584500043&ref=lp_3_pg_2'
+            if BooksSpider.page_no <= 50:
+                BooksSpider.page_no += 1
+                yield Request(next_page, callback=self.parse)
