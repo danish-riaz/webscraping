@@ -8,18 +8,6 @@ class CoursesSpider(Spider):
     name = 'courses'
     allowed_domains = ['classcentral.com']
     start_urls = ['https://www.classcentral.com/subject/cs',
-                  'https://www.classcentral.com/subject/business',
-                  'https://www.classcentral.com/subject/humanities',
-                  'https://www.classcentral.com/subject/data-science',
-                  'https://www.classcentral.com/subject/personal-development',
-                  'https://www.classcentral.com/subject/art-and-design',
-                  'https://www.classcentral.com/subject/programming-and-software-development',
-                  'https://www.classcentral.com/subject/engineering',
-                  'https://www.classcentral.com/subject/health',
-                  'https://www.classcentral.com/subject/maths',
-                  'https://www.classcentral.com/subject/science',
-                  'https://www.classcentral.com/subject/social-sciences',
-                  'https://www.classcentral.com/subject/education',
                   ]
 
     def parse(self, response):
